@@ -10,45 +10,38 @@ public class Paddle : MonoBehaviour
     private bool launched = false;
     
 
-    void Awake(){
+    void Awake()
+    {
         rigidBody = GetComponent<Rigidbody2D>(); // Get the RigidBody info from prefab
-       
-
-
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (launched){
-        move();
+        if (launched)
+        {
+            Move();
         }
 
-        if (Input.GetKey(KeyCode.Space)){
+        if (Input.GetKey(KeyCode.Space))
+        {
             launched = true;
         }
         
         
     }
-    void FixedUpdate(){
+    void FixedUpdate()
+    {
         if (direction.sqrMagnitude != 0)
         {
             rigidBody.AddForce(direction * this.speed);
         }
 
     }
-    void move()
+    void Move()
     {
-        float x = 0;
-        if (Input.GetKey(KeyCode.A))
-        {
-            x = -0.5f;
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            x = 0.5f;
-        }
-        direction = new Vector2(x, 0);
+        float horizontalInput = Input.GetAxis("Horizontal");
+        direction = new Vector2(horizontalInput, 0);
         rigidBody.AddForce(direction * this.speed);
     }
 }
