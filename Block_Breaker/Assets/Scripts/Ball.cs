@@ -50,4 +50,12 @@ public class Ball : MonoBehaviour
         rigidBody.AddForce(direction * this.speed); // Add force to the rigidbody when direction is decided
 
     }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.CompareTag("Block"))
+        {
+            Destroy(collision.gameObject);
+        }
+    }
 }
