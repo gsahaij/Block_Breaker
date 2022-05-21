@@ -7,8 +7,6 @@ public class Paddle : MonoBehaviour
     private Rigidbody2D rigidBody; // Rigidbody2D reference for movement
     public float speed = 100f; // Speed at which the object moves
     private Vector2 direction;
-    private bool launched = false;
-    
 
     void Awake()
     {
@@ -18,17 +16,7 @@ public class Paddle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (launched)
-        {
-            Move();
-        }
-
-        if (Input.GetKey(KeyCode.Space))
-        {
-            launched = true;
-        }
-        
-        
+        Move();
     }
     void FixedUpdate()
     {

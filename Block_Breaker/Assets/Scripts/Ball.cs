@@ -1,22 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Ball : MonoBehaviour
 {
     public float speed = 200f;
+    public Transform paddleTransform;
     private Rigidbody2D rigidBody;
+    private Transform tf;
     private bool launched = false; // Boolean for if the ball is launched by hitting "Space"
     private Vector2 direction; // Direction of the ball
+    public HudManager hud;
     private void Awake()
     {
+        tf = GetComponent<Transform>();
         rigidBody = GetComponent<Rigidbody2D>();
-        
+        hud.Refresh();
     }
     // Start is called before the first frame update
-    private void Update(){
+    private void Update()
+    {
         if (!launched)
         {
+            // Lock position to paddle when not launched
+            Vector3 newPosition = new Vector3(paddleTransform.position.x, 0.0f);
+            tf.localPosition = newPosition;
+
             if (Input.GetKey(KeyCode.Space)) // If you hit space then the ball is launche 
             {
                 AddStartingForce();
@@ -25,7 +35,8 @@ public class Ball : MonoBehaviour
         }
 
     }
-    private void MoveWithPaddle(){ // Idea for getting the ball to move with the paddle at the start of the game
+    private void MoveWithPaddle() // Idea for getting the ball to move with the paddle at the start of the game
+    {
         float horizontalInput = Input.GetAxis("Horizontal");
         direction = new Vector2(horizontalInput, 0);
         rigidBody.AddForce(direction * this.speed);
@@ -51,10 +62,19 @@ public class Ball : MonoBehaviour
 
     }
 
+    void OnBecameInvisible()
+    {
+        GameManager.instance.score = 0;
+        hud.Refresh();
+        SceneManager.LoadScene("SampleScene");
+    }
+
     void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.gameObject.CompareTag("Block"))
         {
+            GameManager.instance.IncreaseScore(1);
+            hud.Refresh();
             Destroy(collision.gameObject);
         }
     }
